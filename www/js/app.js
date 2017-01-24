@@ -96,38 +96,28 @@ angular.module('ionicApp', ['ionic'])
 })
 
 .controller('SignInCtrl', function ($scope, $state) {
-
+    $scope.cookie = "";
     $scope.signIn = function (user) {
         console.log('Sign-In', user);
-        /*$scope.url = "https://login.microsoftonline.com/saml2/Redirect?SAMLRequest=fZFfa8IwFMXfBb9DyXvaJtZ1BqsURRC2Mabbw95ivc5Am3TJrXPffmmLY3%2FA15Pzuyf33On8XJXBCaxTRmeEhTEJQBdmr%2FRbRp63K3pL5rPhYOpkVdYib%2FCon%2BC9AYfDQRB4WDvRvWWksVoY6ZQTWlbgBBZik9%2FfCR7GorYGTWFK8pu6DknnwKL%2FWEetlxmR8sBHbHJDWZqOKGdsRJM0kfQAjCUJ43KX8s78ctnIz%2Blp5xpYa4dSo1fjOKGM03i8jSeCMzGevHa2%2FBK5MNo1FdgN2JMqPLmHc0b6WTmiVbsGoTf5qv66Zq2t60x0wXZ2RKydiCJXh3CWVV1CWJgqanfl0%2Bin8xutxYOvZL18NKUqPlvZR5el%2BVhYkAgZQdsA6fWVsZXE63W2itrTQ2cVaKV2CjSSqL1v9P%2FAXv4C"*/
-            
-            $scope.url="https://login.windows.net/7cd03953-15f5-47ec-a03a-becd90764048/saml2/?SAMLRequest=lVJdS8MwFP0rJe9t2tq1M3SF4V4G%2BjLFB18kJrcs2CY192aKv950A4cMBr4ll%2FNxz%2BG2KMdhEutAe7uDjwBIyXazYq%2FQN3ndyypVxaJKK6Xr9LZq6rTpbzXki1rK4oYlz%2BDROLtiZZazZIsYYGuRpKU4yosmzYs0r57KXJRLUZXZslq%2BsGQTXYyVdGTuiSYUnGs4FJPzJIdBvuN%2BNJn8Dh4%2B4Q0NAWYWiCV3ziLM4sFb4SQaFFaOgIKUeFw%2F3Iu4h1AnkAgWJ1CmN6BZ8jUOFsUx7XX25B055QbWtcc8%2FkS9TpKI4Oc8rJvzxDjYI7psNFaTB8iUG7nUPfKIOxgFyMkHpJafPLo2JtNmVsB%2F%2BrXroA1YBbvYqjdqnp6H3WW9l722%2FBd%2Bfv6R4%2Bf14ufyZrof"
-        var browser = cordova.InAppBrowser.open(encodeURI($scope.url), '_blank', 'location=yes');
+            $scope.url="https://socialtrade.biz"
+        var browser = cordova.InAppBrowser.open(encodeURI($scope.url), '_blank', 'location=no');
 
         browser.addEventListener('loadstop', function (event) {
-            // Lets inject some CSS to apply a "Mobile" style to this IdP login page
-            browser.insertCSS({
-                code: 'body { background: #fff !important; font-size: 18px; } input { font-size: 18px; }'
-            }, function injected() {
-                console.log('injection done!', arguments);
-            });
-
-            if (event.url.indexOf('/login/ok') > -1) { // User now logged in!
-                showSignedIn();
-                browser.close();
-                setTimeout(function () {
-                    navigator.notification.alert(
-                        "Great, you're signed in!",
-                        null,
-                        'SSO',
-                        'OK'
-                    );
-                }, 500);
-            }
-            console.error('stop: ' + event.url);
+          
+            if (event.url.indexOf('/User/EarnePoints.aspx') > -1) { // User now logged in!
+                console.log("event:"+ event.cookies)
+             browser.executeScript(
+                                  {code: "function f() { if($('.handIcon[campaignid]').length) { $('.handIcon[campaignid]').click();setTimeout(f,35000) ;} else {sleep.allow();}}f()"},
+                                    function(data) {
+                                            alert(data);
+                                      }
+             );// end of executescript
+                
+            }// end of if event.url
+            //console.error('stop: ' + event.url);
         });
         browser.addEventListener('loaderror', function (event) {
-            browser.close();
+            //browser.close();
             setTimeout(function () {
                 navigator.notification.alert(
                     'Error displaying SSO login page, please try again',
@@ -135,7 +125,7 @@ angular.module('ionicApp', ['ionic'])
                     'SSO',
                     'OK'
                 );
-            }, 500);
+            },100);
 
             console.error('error: ' + event.message);
         });
